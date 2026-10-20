@@ -7,3 +7,7 @@ de Valparaíso, held in Valparaíso, Chile, on October 21–22, 2026.
 
 We would like to express our gratitude to Professor Eloy Alvarado from the Pontificia Universidad Católica de Chile for his
 support in making this research visit possible.
+
+Jorge Luis Bazán University of São Paulo jlbazan@icmc.usp.br
+
+Date: 20/10/2026
