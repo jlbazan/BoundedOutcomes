@@ -1,0 +1,50 @@
+model{
+#likelihood
+ for (i in 1:N) {
+  for (j in 1:J) {
+    for (k in 1:K) {
+      w[i, j, k] <- pow(alpha[i, k], q[j, k])
+                    }
+    eta[i, j] <- prod(w[i, j, 1:K])
+    u[i, j] <- ifelse(eta[i,j]==1, u1[j], u0[j])
+    phif[i, j] <- ifelse(eta[i,j]==1, phi1[j], phi0[j])
+#usual parameterization of the beta distribution
+    a[i,j] <- u[i,j]*phif[i,j]
+    b[i,j] <- (1-u[i,j])*phif[i,j]
+    Y[i,j] ~ dbeta(a[i, j], b[i, j])
+#log likelihood 
+    loglik[i, j] <- logdensity.beta(Y[i,j],a[i, j], b[i, j])
+    }
+
+
+#Priors for Respondent Parameters
+  for (k in 1:K) {
+alpha[i, k] <- all.patterns[c[i], k]
+                  }
+    c[i] ~ dcat(pai[1:C])}
+  pai[1:C] ~ ddirch(delta[1:C])
+ 
+#Priors for Item Parameters
+  for (i in 1:2){
+  for (j in 1:J) {
+    muaux[i,j] ~ dbeta(1, 1)
+     }
+    }
+  for (j in 1:J){
+     mu[1:2,j] <- sort(muaux[1:2,j])
+#ordering of the parameters uj0 and uj1 
+     u1[j] <- mu[2,j]
+     u0[j] <- mu[1,j]
+     phi0[j] ~ dgamma(0.01,0.01)
+     phi1[j] ~ dgamma(0.01,0.01)
+               }
+
+ for (i in 1:N) {
+  for (j in 1:J) {
+    Y.rep[i,j] ~ dbeta(a[i, j], b[i, j])
+    }
+    }
+sumyrep <- sum(Y.rep[1:N,1:J])
+sumy <- sum(Y[1:N,1:J])
+  ppp<- step(sumyrep-sumy)
+}
